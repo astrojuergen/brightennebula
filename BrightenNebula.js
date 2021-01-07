@@ -46,7 +46,7 @@ function BrightenNebula(view) {
    starnet.mask = false;
    console.writeln("StrideNumber = "+ strideNumber);
    starnet.stride = strideNumber;
-   result = starnet.executeOn(view2);
+   starnet.executeOn(view2);
 
    merge(view2, view, "", newImageName + "_px");
 
