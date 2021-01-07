@@ -31,10 +31,46 @@ function BrightenNebula(view) {
    var starnet = new StarNet();
    starnet.mask = false;
 
-   var view2 = new View(view);
+   var view2 = new copyView(view, view.id + "_copy");
+
 
    result = starnet.executeOn(view2);
 
+
+}
+
+function copyView( view, newName)
+{
+   var P = new PixelMath;
+   P.expression = "$T";
+   P.expression1 = "";
+   P.expression2 = "";
+   P.expression3 = "";
+   P.useSingleExpression = true;
+   P.symbols = "";
+   P.generateOutput = true;
+   P.singleThreaded = false;
+   P.use64BitWorkingImage = false;
+   P.rescale = false;
+   P.rescaleLower = 0;
+   P.rescaleUpper = 1;
+   P.truncate = true;
+   P.truncateLower = 0;
+   P.truncateUpper = 1;
+   P.createNewImage = true;
+   P.showNewImage = true;
+   P.newImageId = newName;
+   P.newImageWidth = 0;
+   P.newImageHeight = 0;
+   P.newImageAlpha = false;
+   P.newImageColorSpace = PixelMath.prototype.SameAsTarget;
+   P.newImageSampleFormat = PixelMath.prototype.SameAsTarget;
+   if (P.executeOn(view))
+      return View.viewById(newName);
+   {
+      message("CopyView failed", "Error");
+      return null;
+   }
 }
 function BrightenNebulaDialog() {
 // Add all properties and methods of the core Dialog object to this object.
