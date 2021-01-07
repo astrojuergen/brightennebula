@@ -3,7 +3,7 @@
 //
 // A script to brighten nebulas
 //
-// Jürgen Ehnes 2021
+// Jürgen Ehnes, Frank Sackenheim 2021
 //////////////////////////////////////
 
 #feature-id Utilities > BrightenNebula
@@ -21,25 +21,48 @@
 #include <pjsr/NumericControl.jsh>
 #include <pjsr/StdDialogCode.jsh>
 
-#define VERSION "0.0.1"
+#define VERSION "0.1.0"
 #define TITLE "BrightenNebula"
 
 #define DEBUG true
 
+var closeStarlessImage = true;
+var strideNumber = 0;
+var strides = new Array();
+
+// BrightenNebula
+//
+// @param view The view to change
 function BrightenNebula(view) {
+
+
+   // To get an really individual name, using an uuid here
+   newImageName = view.id + "_" + uuidv4();
+
+   var view2 = new copyView(view, newImageName);
 
    var starnet = new StarNet();
    starnet.mask = false;
-
-   var view2 = new copyView(view, view.id + "_copy");
-
-
+   console.writeln("StrideNumber = "+ strideNumber);
+   starnet.stride = strideNumber;
    result = starnet.executeOn(view2);
 
+   merge(view2, view, "", newImageName + "_px");
+
+   if (closeStarlessImage) {
+      view2.window.forceClose();
+   }
 
 }
 
-function copyView( view, newName)
+// copyView
+//
+// Creates a new view with imagedata of the source
+//
+// @param sourceView the view to copy
+// @param newName the name of the new view
+// @return the new view
+function copyView( sourceView, newName)
 {
    var P = new PixelMath;
    P.expression = "$T";
@@ -65,13 +88,59 @@ function copyView( view, newName)
    P.newImageAlpha = false;
    P.newImageColorSpace = PixelMath.prototype.SameAsTarget;
    P.newImageSampleFormat = PixelMath.prototype.SameAsTarget;
-   if (P.executeOn(view))
+   if (P.executeOn(sourceView))
       return View.viewById(newName);
    {
       message("CopyView failed", "Error");
       return null;
    }
 }
+
+function merge(sourceView, destinationView, mergeFunction, newName) {
+ var P = new PixelMath;
+   P.expression = "IMG1=" +sourceView.id + ";IMG2=" + destinationView.id + ";~(~IMG1 * ~IMG2)";
+   P.expression1 = "";
+   P.expression2 = "";
+   P.expression3 = "";
+   P.useSingleExpression = true;
+   P.symbols = "IMG1, IMG2";
+   P.generateOutput = true;
+   P.singleThreaded = false;
+   P.use64BitWorkingImage = false;
+   P.rescale = false;
+   P.rescaleLower = 0;
+   P.rescaleUpper = 1;
+   P.truncate = true;
+   P.truncateLower = 0;
+   P.truncateUpper = 1;
+   P.createNewImage = true;
+   P.showNewImage = true;
+   P.newImageId = newName;
+   P.newImageWidth = 0;
+   P.newImageHeight = 0;
+   P.newImageAlpha = false;
+   P.newImageColorSpace = PixelMath.prototype.SameAsTarget;
+   P.newImageSampleFormat = PixelMath.prototype.SameAsTarget;
+   if (P.executeOn(sourceView))
+      return View.viewById(newName);
+   {
+      message("CopyView failed", "Error");
+      return null;
+   }
+}
+// uuidv4
+// Creates uuid with _ instead if -
+//
+// @return a new uuid value
+function uuidv4() {
+  return 'xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+// BrightenNebulaDialog
+// Creates a dialog window
 function BrightenNebulaDialog() {
 // Add all properties and methods of the core Dialog object to this object.
    this.__base__ = Dialog;
@@ -100,8 +169,8 @@ function BrightenNebulaDialog() {
 
       text = "<p><b>" + TITLE + " v" + VERSION + "</b> &mdash; " +
       "Brighten Nebula Utility.</p>" +
-      "<p>Brightens a nebula in an image by negative multiplication." +
-      "<p>Author: Juergen Ehnes </p>" +
+      "<p>Brightens a nebula in an image by star removal and negative multiplication." +
+      "<p>Author: Juergen Ehnes, Frank Sackenheim 2021 </p>" +
       "<p></p>";
     }
 
@@ -124,6 +193,38 @@ function BrightenNebulaDialog() {
 
    this.targetImage_Sizer.add(this.targetImage_Label);
    this.targetImage_Sizer.add(this.targetImage_ViewList, 100);
+
+   this.cbCloseStarlessImage = new CheckBox(this)
+   with (this.cbCloseStarlessImage) {
+      checked = true;
+      text = "Close starless image";
+
+      onCheck = function (checked) {
+            update();
+            closeStarlessImage = !closeStarlessImage;
+            console.writeln("closeStarlessImage = " + closeStarlessImage);
+      }
+   }
+
+   var starnet = new StarNet;
+   strides["128"] = starnet.Stride_128;
+   strides["64"] = starnet.Stride_64;
+   strides["32"] = starnet.Stride_32;
+   strides["16"] = starnet.Stride_16;
+   strides["8"] = starnet.Stride_8;
+
+   this.stridesCombo = new ComboBox(this);
+   with (this.stridesCombo) {
+      for (var key in strides) {
+         addItem(key);
+      }
+      currentItem = 4;
+      onItemSelected = function(index) {
+         strideNumber = strides[itemText(index)];
+         console.writeln("StrideNumber = " + strideNumber);
+      }
+   }
+
 
    this.buttons_Sizer = new HorizontalSizer;
    this.buttons_Sizer.spacing = 6;
@@ -171,6 +272,8 @@ function BrightenNebulaDialog() {
    this.sizer.add(this.helpLabel);
    this.sizer.addSpacing(4);
    this.sizer.add(this.targetImage_Sizer);
+   this.sizer.add(this.cbCloseStarlessImage);
+   this.sizer.add(this.stridesCombo);
    this.sizer.add(this.buttons_Sizer);
 
    this.windowTitle = TITLE + " Script";
@@ -217,13 +320,15 @@ function main() {
       console.abortEnabled = true;
       console.show();
 
-      var start = new Date;
+      var startTime = new Date;
 
       data.targetView.beginProcess(UndoFlag_NoSwapFile);
       BrightenNebula(data.targetView);
       data.targetView.endProcess();
 
-      var timeNeeded = ((new Date).getTime() - start.getTime() / 1000);
+      var endTime = new Date
+
+      var timeNeeded = (endTime.getTime() - startTime.getTime()) / 1000;
 
       console.writeln(format("<end><cbr>BrightenNebula: %.2f s", timeNeeded));
       break;
