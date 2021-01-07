@@ -21,7 +21,7 @@
 #include <pjsr/NumericControl.jsh>
 #include <pjsr/StdDialogCode.jsh>
 
-#define VERSION "0.1.0"
+#define VERSION "0.1.1"
 #define TITLE "BrightenNebula"
 
 #define DEBUG true
@@ -29,6 +29,7 @@
 var closeStarlessImage = true;
 var strideNumber = 0;
 var strides = new Array();
+var targetView = ImageWindow.activeWindow.currentView;
 
 // BrightenNebula
 //
@@ -184,11 +185,11 @@ function BrightenNebulaDialog() {
    this.targetImage_ViewList = new ViewList(this);
    this.targetImage_ViewList.minWidth = 360;
    this.targetImage_ViewList.getAll(); // include main views as well as previews
-   this.targetImage_ViewList.currentView = data.targetView;
+   this.targetImage_ViewList.currentView = targetView;
    this.targetImage_ViewList.toolTip = this.targetImage_Label.toolTip = "Select the image that will be used to generate the mask.";
 
    this.targetImage_ViewList.onViewSelected = function(view) {
-      data.targetView = view;
+      targetView = view;
    };
 
    this.targetImage_Sizer.add(this.targetImage_Label);
@@ -290,7 +291,7 @@ function main() {
       Console.hide();
    }
 
-    if (!data.targetView) {
+    if (!targetView) {
       (new MessageBox("There is no active image window!",
          TITLE, StdIcon_Error, StdButton_Ok)).execute();
       return;
@@ -304,14 +305,14 @@ function main() {
       }
 
       // A view must be selected.
-      if (data.targetView.isNull) {
+      if (targetView.isNull) {
          (new MessageBox("You must select a view to apply this script.",
                TITLE, StdIcon_Error, StdButton_Ok)).execute();
          continue;
       }
 
       // Must be a color image?
-      if (data.targetView.image.numberOfChannels != 3) {
+      if (targetView.image.numberOfChannels != 3) {
          (new MessageBox("You must supply an RGB color image.",
                TITLE, StdIcon_Error, StdButton_Ok)).execute();
          continue;
@@ -322,9 +323,9 @@ function main() {
 
       var startTime = new Date;
 
-      data.targetView.beginProcess(UndoFlag_NoSwapFile);
-      BrightenNebula(data.targetView);
-      data.targetView.endProcess();
+      targetView.beginProcess(UndoFlag_NoSwapFile);
+      BrightenNebula(targetView);
+      targetView.endProcess();
 
       var endTime = new Date
 
