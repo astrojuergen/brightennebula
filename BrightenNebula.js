@@ -7,8 +7,8 @@
 //////////////////////////////////////
 
 #feature-id Utilities > BrightenNebula
-#feature-info An image blending utility.
-#feature-icon Blend.xpm
+#feature-info A tool to brighten up nebulas
+#feature-icon brightenNebula.xpm
 
 #include <pjsr/Color.jsh>
 #include <pjsr/Sizer.jsh>
