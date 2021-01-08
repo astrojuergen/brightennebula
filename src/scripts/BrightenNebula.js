@@ -206,6 +206,9 @@ function BrightenNebulaDialog() {
    this.targetImage_Sizer.add(this.targetImage_Label);
    this.targetImage_Sizer.add(this.targetImage_ViewList, 100);
 
+   this.cbCloseStarlessImage_Sizer = new HorizontalSizer;
+   this.cbCloseStarlessImage_Sizer.spacing = 4;
+
    this.cbCloseStarlessImage = new CheckBox(this)
    with (this.cbCloseStarlessImage) {
       checked = true;
@@ -225,6 +228,10 @@ function BrightenNebulaDialog() {
    strides["16"] = starnet.Stride_16;
    strides["8"] = starnet.Stride_8;
 
+   this.stridesCombo_Label = new Label(this);
+   this.stridesCombo_Label.text = "Stride: ";
+   this.stridesCombo_Label.textAlignment = TextAlign_Right|TextAlign_VertCenter;
+
    this.stridesCombo = new ComboBox(this);
    with (this.stridesCombo) {
       for (var key in strides) {
@@ -237,6 +244,9 @@ function BrightenNebulaDialog() {
       }
    }
 
+   this.cbCloseStarlessImage_Sizer.add(this.stridesCombo_Label);
+   this.cbCloseStarlessImage_Sizer.add(this.stridesCombo, 100);
+   this.cbCloseStarlessImage_Sizer.add(this.cbCloseStarlessImage);
 
    this.buttons_Sizer = new HorizontalSizer;
    this.buttons_Sizer.spacing = 6;
@@ -284,8 +294,7 @@ function BrightenNebulaDialog() {
    this.sizer.add(this.helpLabel);
    this.sizer.addSpacing(4);
    this.sizer.add(this.targetImage_Sizer);
-   this.sizer.add(this.cbCloseStarlessImage);
-   this.sizer.add(this.stridesCombo);
+   this.sizer.add(this.cbCloseStarlessImage_Sizer);
    this.sizer.add(this.buttons_Sizer);
 
    this.windowTitle = TITLE + " Script";
