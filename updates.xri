@@ -5,8 +5,8 @@
         BrightenNebula script.
         </p>
     </description>
-    <platform os="all" arch="noarch" version="1.0.0:1.0.0">
-        <package fileName="brightennebula1_0_0.zip" sha1="5f62e6c9995333b13491eff968f95c38818173ed" type="scripts" releaseDate="20200109">
+    <platform os="all" arch="noarch" version="1.8.8:9.9.9">
+        <package fileName="brightennebula1_0_0.zip" sha1="ca05578d0db9f0ea55ada43f9875e63386344368" type="script" releaseDate="20200109">
             <title>
             BrightenNebula script
             </title>
@@ -15,7 +15,7 @@
             </remove>
             <description>
                 <p>
-               This update installs the brighten nebula script for Pixinsight starting with version 1.8.6
+               This update installs the brighten nebula script for Pixinsight starting with version 1.8.8
                 </p>
                 <p>
                 This script brightens up nebulas by removing the stars and multiplying negatively with the original image

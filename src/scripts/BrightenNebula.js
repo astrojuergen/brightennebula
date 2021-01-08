@@ -24,7 +24,7 @@
 #define VERSION "0.1.1"
 #define TITLE "BrightenNebula"
 
-#define DEBUG true
+#define DEBUG false
 
 var closeStarlessImage = true;
 var strideNumber = 0;
@@ -38,7 +38,7 @@ function BrightenNebula(view) {
 
 
    // To get an really individual name, using an uuid here
-   newImageName = view.id + "_" + uuidv4();
+   var newImageName = view.id + "_" + uuidv4();
 
    var view2 = new copyView(view, newImageName);
 
@@ -46,9 +46,21 @@ function BrightenNebula(view) {
    starnet.mask = false;
    console.writeln("StrideNumber = "+ strideNumber);
    starnet.stride = strideNumber;
-   starnet.executeOn(view2);
 
-   merge(view2, view, "", newImageName + "_px");
+   var starnetresult = false;
+
+   try {
+      starnetresult = starnet.executeOn(view2);
+   } catch(err) {
+
+      var mb = new MessageBox("starnet execution failed. Starnet configured properly? Error: " + err.message);
+      mb.execute();
+      starnetresult = false;
+   }
+
+   if (starnetresult) {
+      merge(view2, view, "", newImageName + "_px");
+   }
 
    if (closeStarlessImage) {
       view2.window.forceClose();
@@ -164,7 +176,6 @@ function BrightenNebulaDialog() {
    {
       frameStyle = FrameStyle_Box;
       margin = 4;
-      readOnly = true;
       wordWrapping = true;
       useRichText = true;
 
@@ -286,9 +297,9 @@ function BrightenNebulaDialog() {
 BrightenNebulaDialog.prototype = new Dialog;
 
 function main() {
-   Console.writeln(TITLE + " started")
+   console.writeln(TITLE + " started")
    if (!DEBUG) {
-      Console.hide();
+      console.hide();
    }
 
     if (!targetView) {
