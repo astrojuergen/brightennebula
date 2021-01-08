@@ -21,7 +21,7 @@
 #include <pjsr/NumericControl.jsh>
 #include <pjsr/StdDialogCode.jsh>
 
-#define VERSION "0.1.1"
+#define VERSION "1.0.0"
 #define TITLE "BrightenNebula"
 
 #define DEBUG false
@@ -182,8 +182,12 @@ function BrightenNebulaDialog() {
       text = "<p><b>" + TITLE + " v" + VERSION + "</b> &mdash; " +
       "Brighten Nebula Utility.</p>" +
       "<p>Brightens a nebula in an image by star removal and negative multiplication." +
+      "<p></p>" +
+      "<p>To use this script you need at least one image open in PixInsight. 1. Choose an image" +
+      " and execute this script to brighten up the image. </p>" +
+      "<p>Complete configuration of starnet++ is required.</p>" +
       "<p>Author: Juergen Ehnes, Frank Sackenheim 2021 </p>" +
-      "<p></p>";
+      "<p>Based on: The blend script by Hartmut Bornemann and others (http://www.skypixels.at/pixinsight_scripts.html)</p>";
     }
 
    this.targetImage_Sizer = new HorizontalSizer;
@@ -213,7 +217,7 @@ function BrightenNebulaDialog() {
    with (this.cbCloseStarlessImage) {
       checked = true;
       text = "Close starless image";
-
+      toolTip = "<p>Decide wether you want to close the generated image or not</p>"
       onCheck = function (checked) {
             update();
             closeStarlessImage = !closeStarlessImage;
@@ -237,6 +241,7 @@ function BrightenNebulaDialog() {
       for (var key in strides) {
          addItem(key);
       }
+      toolTip = "<p>The stride value in starnet++</p>";
       currentItem = 4;
       onItemSelected = function(index) {
          strideNumber = strides[itemText(index)];
