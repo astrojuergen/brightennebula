@@ -6,7 +6,7 @@
         </p>
     </description>
     <platform os="all" arch="noarch" version="1.8.8:9.9.9">
-        <package fileName="brightennebula1_0_0.zip" sha1="ca05578d0db9f0ea55ada43f9875e63386344368" type="script" releaseDate="20200109">
+        <package fileName="brightennebula1_0_0.zip" sha1="567b821de7ddf4e1a75552a4225c72548e8ed341" type="script" releaseDate="20200109">
             <title>
             BrightenNebula script
             </title>
