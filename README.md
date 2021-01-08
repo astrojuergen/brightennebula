@@ -22,3 +22,7 @@ Brighten Nebula Script for PixInsight
 3. Run script
 4. Voilà -> Nebula is brighter than before.
 5. Now you have to adjust the black point in the histogram 
+
+
+# Possible errors
+1. If you get the following error "*** Error: File I/O Error: Invalid or empty file name". You have to completly configure starnet. 
