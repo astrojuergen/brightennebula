@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xri version="1.0">
+    <description>
+        <p>
+        BrightenNebula script.
+        </p>
+    </description>
+    <platform os="all" arch="noarch" version="1.0.0:1.0.0">
+        <package fileName="brightennebula1_0_0.zip" sha1="5f62e6c9995333b13491eff968f95c38818173ed" type="scripts" releaseDate="20200109">
+            <title>
+            BrightenNebula script
+            </title>
+            <remove>
+            src/scripts/brightennebula.js
+            </remove>
+            <description>
+                <p>
+               This update installs the brighten nebula script for Pixinsight starting with version 1.8.6
+                </p>
+                <p>
+                This script brightens up nebulas by removing the stars and multiplying negatively with the original image
+                </p>
+                <p> url
+                </p>
+                <p>
+               Copyright (c) 2021 Juergen Ehnes, Frank Sackenheim
+                </p>
+            </description>
+        </package>
+    </platform>
+</xri>
