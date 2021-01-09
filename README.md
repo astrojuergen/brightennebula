@@ -5,7 +5,7 @@ Brighten Nebula Script for PixInsight
 1. Start Pixinsight
 2. Goto "Resources" -> "Updates" -> "Manage Repositories" 
 3. Click "Add"
-4. Enter this url: http://astrojuergen.ehnes.eu/scripts/
+4. Enter this url: https://astrojuergen.ehnes.eu/scripts/
 5. Close the "Manage Repositories" Window
 6. Start searching for updates with "Resources" -> "Updates" -> "Check for Updates"
 7. When Update is shown install it
